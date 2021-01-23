@@ -21,7 +21,10 @@ class AdminPage extends Component {
     this.state = {
       loading: false,
       markers: [],
-      points: []
+      selectedUser: "",
+      user: {},
+      points: {},
+      showAll: false
     };
   }
 
@@ -40,80 +43,192 @@ class AdminPage extends Component {
       this.setState({
         markers: markersList,
         loading: false,
+        showAll: true
       });
-      console.log(markersList)
     });
   }
 
   render() {
-    const { markers, loading } = this.state;
+    const { markers, loading, selectedUser, user, showAll } = this.state;
+
+    var triangleCoords = []
+
+    if (selectedUser) {
+      Object.keys(user.points).map(key => {
+        var lat = user.points[key].lat;
+        var lng = user.points[key].lng;
+        triangleCoords.push({ lat, lng })
+      });
+    }
+
+    var allCoords = []
+
+    markers.map(user => {
+      var coords = []
+
+      Object.keys(user.points).map(key => {
+        var lat = user.points[key].lat;
+        var lng = user.points[key].lng;
+        coords.push({ lat, lng })
+      });
+
+      allCoords.push(coords)
+    });
 
     return (
       <div>
         <h1>Dashboard</h1>
 
+        {/* <br />
+        <br /> */}
+
+        {/* <button onClick={ () => {this.setState({showAll: !showAll})}}>{showAll ? "Hide" : "Show"} All Users</button> */}
+
+        {/* <br />
+        <br /> */}
+
         {loading && <div>Cargando ...</div>}
 
-        <UserList markers={markers} />
-        
+        <><label htmlFor="userselect">Select User: </label>
 
-<Map
-initialCenter={{
-  lat: -0.24542770000000003,
-  lng: -78.5309735
-}}
+          <select name="user" id="userselect" onChange={e => {
+            if (e.target.value !== "") {
+              this.setState({
+                selectedUser: e.target.value,
+                user: this.state.markers.find(user => user.uid === e.target.value),
+                showAll: false
+              })
+            } else {
+              this.setState({
+                selectedUser: e.target.value,
+                user: {},
+                showAll: true
+              })
+            }
+          }}>
 
-google={this.props.google}
-style={{ width: "80%", margin: "auto" }}
-className={"map"}
-zoom={20}
-onClick={this.onPointMap}
->
+            {/*Cargar todo los datos de la base */}
+            <option value="">All</option>
+            {markers.map((user, index) => (
+              <option key={index} value={user.uid}>{user.uid}</option>
+            ))}
+
+          </select></>
+
+        {!showAll && selectedUser && (
+          <div style={{ display: "flex" }}>
+            <div>
+              <br />
+              <br />
+              <button onClick={() => {
+                let ref = Firebase.database().ref("Marker/" + selectedUser);
+                ref.remove();
+                window.location.reload();
+              }}>Delete User {selectedUser}</button>
+              <br />
+              <br />
+              <UserList markers={markers} selectedUser={selectedUser} user={user} />
+            </div>
 
 
+            <div>
+              <Map
+                initialCenter={{
+                  lat: Object.entries(user.points)[0][1].lat,
+                  lng: Object.entries(user.points)[0][1].lng
+                }}
+                center={{
+                  lat: Object.entries(user.points)[0][1].lat,
+                  lng: Object.entries(user.points)[0][1].lng
+                }}
+                google={this.props.google}
+                style={{ width: "80%", margin: "auto" }}
+                className={"map"}
+                zoom={16}
+                onClick={this.onPointMap}
+              >
 
-{this.state.markers.map((marker, index) => (
-  <Marker
-    key={index}
-    title={marker.title}
-    name={marker.name}
-    position={marker.position}
-  />
-))}
- 
-</Map>
+
+                {Object.keys(user.points).map((key, index) => (
+                  <Marker
+                    key={index}
+                    title={key}
+                    name={key}
+                    position={{ lat: user.points[key].lat, lng: user.points[key].lng }}
+                  />
+                ))
+                }
+
+                {allCoords.map((poly, index) => (
+                  <Polyline
+                    key={index}
+                    path={poly}
+                    strokeColor="#0000FF"
+                    strokeOpacity={0.8}
+                    strokeWeight={2} />
+                ))}
+
+              </Map></div></div>)}
+
+        {showAll && (
+          <Map
+            initialCenter={{
+              lat: Object.entries(allCoords[0])[0][1].lat,
+              lng: Object.entries(allCoords[0])[0][1].lng
+            }}
+            google={this.props.google}
+            style={{ width: "80%", margin: "auto" }}
+            className={"map"}
+            zoom={15}
+            onClick={this.onPointMap}
+          >
+
+            {allCoords.map((poly, index) => (
+              <Polyline
+                key={index}
+                path={poly}
+                strokeColor="#0000FF"
+                strokeOpacity={0.8}
+                strokeWeight={2} />
+            ))}
+          </Map>
+        )}
 
 
-</div>
+      </div>
     );
   }
 }
 
 
-const UserList = ({ markers }) => (
-  <ul>
-    {markers.map(marker => (
-      <li key={marker.uid}>
-        <span>
-          <strong>ID ruta:</strong> {marker.uid}
-        </span>
-        <br/>
-        <span>
-    <strong>ID latitude:</strong> {marker.lat}
-  </span>
-  <br />
-  <span>
-    <strong>ID longitude:</strong> {marker.lng}
-  </span>
-  <br/>
-        <span>
-          <strong>ID User:</strong> {marker.userId}
-        </span>
-      </li>
-    ))}
-  </ul>
+const UserList = ({ markers, selectedUser, user }) => {
+  var points = user.points;
+  return (
+    <ul>
+      {Object.keys(points).map(key => (
+        <li key={key}>
+          <span>
+            <strong>ID ruta:</strong> {key}
+          </span>
+          <br />
+          <span>
+            <strong>ID latitude:</strong> {points[key].lat}
+          </span>
+          <br />
+          <span>
+            <strong>ID longitude:</strong> {points[key].lng}
+          </span>
+          <br />
+          <span>
+            <strong>ID User:</strong> {selectedUser}
+          </span>
+        </li>
+      ))}
 
-);
+    </ul>
+
+  )
+};
 
 
 export default GoogleApiWrapper({

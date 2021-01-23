@@ -122,6 +122,11 @@ class MainMap extends Component {
 
   render() {
     // console.log('user : ' + firebaseAuth.currentUser.uid)
+    let bicycleCoords = []
+
+    this.state.markerList.slice(1).map(({lat, lng}) => {
+      bicycleCoords.push({lat, lng})
+    })
 
     const { dataUser } = this.state
     const triangleCoords = [
@@ -217,7 +222,7 @@ class MainMap extends Component {
           zoom={20}
           onClick={this.onPointMap}
         >
-          {this.state.markers.map((marker, uid) => (
+          {this.state.markers.slice(1).map((marker, uid) => (
             <Marker
               key={uid}
               title={marker.title}
@@ -294,6 +299,12 @@ class MainMap extends Component {
             strokeColor="yellow"
             strokeOpacity={1}
             strokeWeight={2} />
+          
+          <Polyline
+          path={bicycleCoords}
+          strokeColor="#0000FF"
+          strokeOpacity={0.8}
+          strokeWeight={2} />
 
         </Map>
 

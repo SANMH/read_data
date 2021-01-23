@@ -39,7 +39,11 @@ class App extends React.Component {
           collapsed={ this.state.collapsed }
           className='sider'
         >
-          <div className='sider__logo' />
+          <div className='sider__logo'>
+            <img src="logo.jpeg" alt="logo" width="48px" />
+            <p>BiciRuta</p>
+          </div>
+          
           <Navigation />
         </Sider>
 

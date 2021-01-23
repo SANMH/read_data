@@ -9,11 +9,17 @@
 .sider__logo {
     height: 32px;
     /*background-image: url('../imgs/logo.png');*/
-    background-color: #00aeef;
+    background-color: #67B050;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
     margin: 16px;
+    display: flex;
+    color: white;
+    align-content: center;
+    justify-content: space-between;
+    padding-right: 30px;
+    font-size: large;
 }
 
 .header {
@@ -33,7 +39,7 @@
 }
 
 .header__trigger:hover {
-    color: #00aeef;
+    color: #67B050;
 }
 
 .content {
