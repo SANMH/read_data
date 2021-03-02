@@ -6,87 +6,82 @@ import { startSetLoginState } from '../actions/authActions';
 import { Icon, Layout } from 'antd';
 import '../styles/app.css';
 
-const {
-  Header, Content, Footer, Sider
-} = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
 class App extends React.Component {
+	state = {
+		collapsed: false,
+	};
 
-  state = {
-    collapsed: false
-  };
+	// onCollapse = ( collapsed, type ) => { console.log( collapsed, type ); };
 
-  // onCollapse = ( collapsed, type ) => { console.log( collapsed, type ); };
+	toggle = () => {
+		this.setState({
+			collapsed: !this.state.collapsed,
+		});
+	};
 
-  toggle = () => {
-    this.setState( {
-      collapsed: !this.state.collapsed
-    } );
-  };
+	componentWillMount() {
+		console.log('APP MOUNTED');
+	}
 
-  componentWillMount() {
-    console.log( 'APP MOUNTED' );
-  }
+	render() {
+		return (
+			<Layout className="app">
+				<Sider
+					trigger={null}
+					breakpoint="lg"
+					collapsedWidth="0"
+					onBreakpoint={(broken) => {
+						this.setState({ collapsed: broken });
+					}}
+					collapsed={this.state.collapsed}
+					className="sider"
+				>
+					<div className="sider__logo">
+						<img src="logo.jpeg" alt="logo" width="48px" />
+						<p>CityOnBike</p>
+					</div>
+					<Navigation />
+				</Sider>
 
-  render() {
-    return (
-      <Layout className='app'>
-        <Sider
-          trigger={ null }
-          breakpoint='lg'
-          collapsedWidth='0'
-          onBreakpoint={ ( broken ) => { this.setState( { collapsed: broken } ); } }
-          collapsed={ this.state.collapsed }
-          className='sider'
-        >
-          <div className='sider__logo'>
-            <img src="logo.jpeg" alt="logo" width="48px" />
-            <p>BiciRuta</p>
-          </div>
-          
-          <Navigation />
-        </Sider>
+				<Layout>
+					<Header className="header">
+						<Icon
+							className="header__trigger"
+							type={
+								this.state.collapsed
+									? 'menu-unfold'
+									: 'menu-fold'
+							}
+							onClick={this.toggle}
+						/>
+					</Header>
 
-        <Layout>
+					<Content className="content">
+						<AppRouter />
+					</Content>
 
-          <Header className="header">
-            <Icon
-              className='header__trigger'
-              type={ this.state.collapsed
-                ? 'menu-unfold'
-                : 'menu-fold' }
-              onClick={ this.toggle }
-            />
-          </Header>
-
-          <Content className='content'>
-            <AppRouter />
-          </Content>
-
-          <Footer className='footer'>
-            BiciRuta 2020
-          
-          </Footer>
-
-          </Layout>
-
-      </Layout>
-
-    );
-  }
+					<Footer className="footer">BiciRuta 2021</Footer>
+				</Layout>
+			</Layout>
+		);
+	}
 }
 
-const mapStateToProps = state => ({
-  ...state
+const mapStateToProps = (state) => ({
+	...state,
 });
 
-const mapDispatchToProps = dispatch => ({
-  startSetLoginState: ( uid ) => {
-    console.log( 'uid', uid );
-    dispatch( startSetLoginState( {
-      uid
-    } ) );
-  }
+const mapDispatchToProps = (dispatch) => ({
+	startSetLoginState: (uid) => {
+		console.log('uid', uid);
+		dispatch(
+			startSetLoginState({
+				uid,
+			}),
+		);
+	},
 });
 
-export default connect( mapStateToProps, mapDispatchToProps )( App );
+export default connect(mapStateToProps, mapDispatchToProps)(App);

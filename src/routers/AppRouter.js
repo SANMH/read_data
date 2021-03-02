@@ -26,17 +26,17 @@ const AsyncAbout = Loadable( {
 
 
 const AsyncMapajs = Loadable( {
-  loader: () => import( '../mapajs/index' ),
+  loader: () => import( '../Creacion_BiciRutas/index' ),
   loading: Loading
 } );
 
 const AsyncInicio = Loadable( {
-  loader: () => import( '../Home/index' ),
+  loader: () => import( '../usuarios_app/index' ),
   loading: Loading
 } );
 
 const AsyncAdmin = Loadable( {
-  loader: () => import( '../Admin/index' ),
+  loader: () => import( '../BiciRutas/index' ),
   loading: Loading
 } );
 
