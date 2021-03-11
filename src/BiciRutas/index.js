@@ -48,6 +48,7 @@ class AdminPage extends Component {
 	componentDidMount() {
 		this.setState({ loading: true });
 
+		// Carga el contenido de 'Bici_rutas' de la base de datos en la variable de estado "marcadores"
 		let ref = Firebase.database().ref('Bici_rutas');
 		ref.on('value', (snapshot) => {
 			const markersObject = snapshot.val();
@@ -66,7 +67,7 @@ class AdminPage extends Component {
 	}
 
 	render() {
-		// redirigir a la página de inicio si el usuario no es administrador
+		// Redirigir a la página de inicio si el usuario no es administrador
 		if (
 			this.state.user &&
 			this.state.user.email &&
@@ -90,16 +91,7 @@ class AdminPage extends Component {
 			isMarkerMoved,
 		} = this.state;
 
-		var triangleCoords = [];
-
-		if (selectedUser && user && user.points) {
-			Object.keys(user.points).map((key) => {
-				var lat = user.points[key].lat;
-				var lng = user.points[key].lng;
-				triangleCoords.push({ lat, lng });
-			});
-		}
-
+		// Almacene todas las rutas de todos los usuarios en una variable global llamada "allCoords"
 		var allCoords = [];
 
 		markers.map((user) => {
@@ -131,7 +123,7 @@ class AdminPage extends Component {
 				{loading && <div>Cargando ...</div>}
 
 				<>
-					<label htmlFor="userselect">Seleccione la BiciRuta:  </label>
+					<label htmlFor="userselect">Seleccione la BiciRuta: </label>
 
 					{/* Select de BiciRutas */}
 					<select
@@ -139,6 +131,8 @@ class AdminPage extends Component {
 						id="userselect"
 						onChange={(e) => {
 							if (e.target.value !== '') {
+
+								// Cuando se selecciona un usuario, se almacena todas las rutas de ese usuario en la variable de estado "usuario"
 								this.setState({
 									selectedUser: e.target.value,
 									user: this.state.markers.find(
@@ -156,35 +150,67 @@ class AdminPage extends Component {
 						}}
 					>
 						<option value="">Todas las rutas</option>
-						{markers.map((user, index) => (
-							<option key={index} value={user.uid}>
-								{user.title ? user.title : user.uid}
-							</option>
-						))}
+						{markers
+							.sort((a, b) => (a.title > b.title ? 1 : -1))
+							.map((user, index) => (
+								<option key={index} value={user.uid}>
+									{user.title ? user.title : user.uid}
+								</option>
+							))}
 					</select>
 
+					<Button
+						style={{ marginLeft: '20px' }}
+						type="danger"
+						onClick={() => this.setState({ visible: true })}
+					>
+						Borrar =={'>'}{' '}
+						{user.title ? user.title : selectedUser}
+					</Button>
+
+					<Button
+						disabled={!isMarkerMoved}
+						style={{ marginLeft: '30px' }}
+						type="primary"
+						onClick={() =>
+							this.setState({ visibleSave: true })
+						}
+					>
+						Guardar cambios para =={'>'}{' '}
+						{user.title ? user.title : selectedUser}
+					</Button>
+					<br />
 					{!showAll && selectedUser && (
 						<>
-							<Button
-								style={{ marginLeft: '20px' }}
-								type="primary"
-								onClick={() => this.setState({ visible: true })}
+							<label
+								style={{
+									marginLeft: '0px',
+								}}
 							>
-								Borrar ==> {user.title ? user.title : selectedUser}
-							</Button>
-							
-							<Button
-								disabled={!isMarkerMoved}
-								style={{ marginLeft: '20px' }}
-								type="primary"
-								onClick={() =>
-									this.setState({ visibleSave: true })
-								}
-							>
+								Cambiar nombre a BiciRuta
 
-								Guardar cambios para ==> {' '}
-								{user.title ? user.title : selectedUser}
-							</Button>
+								<input
+									style={{
+										marginLeft: '10px',
+										width: '300px'
+									}}
+									value={this.state.user.title}
+									placeholder="Title"
+									onChange={(e) => {
+										let newTitle = e.target.value;
+										if (newTitle !== user.title) {
+											let user = this.state.user;
+											user.title = newTitle;
+											this.setState({
+												user: user,
+												isMarkerMoved: true,
+											});
+										}
+									}}
+								/>
+							</label>
+
+
 
 							<Modal
 								title={`Borrar ${user.title ? user.title : selectedUser
@@ -348,33 +374,6 @@ class AdminPage extends Component {
 		);
 	}
 }
-
-const UserList = ({ markers, selectedUser, user }) => {
-	var points = user.points;
-	return (
-		<ul>
-			{Object.keys(points).map((key) => (
-				<li key={key}>
-					<span>
-						<strong>ID ruta:</strong> {key}
-					</span>
-					<br />
-					<span>
-						<strong>ID latitude:</strong> {points[key].lat}
-					</span>
-					<br />
-					<span>
-						<strong>ID longitude:</strong> {points[key].lng}
-					</span>
-					<br />
-					<span>
-						<strong>ID User:</strong> {selectedUser}
-					</span>
-				</li>
-			))}
-		</ul>
-	);
-};
 
 export default GoogleApiWrapper({
 	apiKey: 'AIzaSyCD7q2HPpizK4ETY07AU18HAS9ruHQ5wow',

@@ -23,7 +23,7 @@ class LoginForm extends Component {
 	}
 
 	componentDidMount() {
-		// To disabled submit button at the beginning.
+		// Para deshabilitar el botón de envío al principio.
 		this.props.form.validateFields();
 	}
 
@@ -55,7 +55,7 @@ class LoginForm extends Component {
 			isFieldTouched,
 		} = this.props.form;
 
-		// Only show error after a field is touched.
+		// Solo muestra el error después de tocar un campo.
 		const emailError = isFieldTouched('email') && getFieldError('email');
 		const passwordError =
 			isFieldTouched('password') && getFieldError('password');

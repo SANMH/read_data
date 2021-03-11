@@ -1,7 +1,3 @@
-/**
- * Created by chalosalvador on 17/01/19.
- */
-
 export const translateMessage = ( type, params = {} ) => {
 
   const messageList = {

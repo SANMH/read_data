@@ -1,14 +1,14 @@
-// This optional code is used to register a service worker.
-// register() is not called by default.
+// Este código opcional se usa para registrar un trabajador de servicio.
+// register () no se llama por defecto.
 
-// This lets the app load faster on subsequent visits in production, and gives
-// it offline capabilities. However, it also means that developers (and users)
-// will only see deployed updates on subsequent visits to a page, after all the
-// existing tabs open on the page have been closed, since previously cached
-// resources are updated in the background.
+// Esto permite que la aplicación se cargue más rápido en visitas posteriores en producción y brinda
+// sus capacidades fuera de línea. Sin embargo, también significa que los desarrolladores (y usuarios)
+// solo verá las actualizaciones implementadas en visitas posteriores a una página, después de todas las
+// las pestañas existentes abiertas en la página se han cerrado, ya que se almacenaron en caché anteriormente
+// los recursos se actualizan en segundo plano.
 
-// To learn more about the benefits of this model and instructions on how to
-// opt-in, read http://bit.ly/CRA-PWA
+// Para obtener más información sobre los beneficios de este modelo e instrucciones sobre cómo
+// opt-in, lea http://bit.ly/CRA-PWA
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
@@ -22,12 +22,12 @@ const isLocalhost = Boolean(
 
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-    // The URL constructor is available in all browsers that support SW.
+    // El constructor de URL está disponible en todos los navegadores que admiten SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
-      // Our service worker won't work if PUBLIC_URL is on a different origin
-      // from what our page is served on. This might happen if a CDN is used to
-      // serve assets; see https://github.com/facebook/create-react-app/issues/2374
+     // Nuestro trabajador de servicio no funcionará si PUBLIC_URL está en un origen diferente
+      // de lo que se sirve nuestra página. Esto puede suceder si se utiliza una CDN para
+      // servir activos; ver https://github.com/facebook/create-react-app/issues/2374
       return;
     }
 
@@ -35,11 +35,11 @@ export function register(config) {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
       if (isLocalhost) {
-        // This is running on localhost. Let's check if a service worker still exists or not.
+        // Esto se ejecuta en localhost. Comprobemos si un trabajador del servicio todavía existe o no.
         checkValidServiceWorker(swUrl, config);
 
-        // Add some additional logging to localhost, pointing developers to the
-        // service worker/PWA documentation.
+       // Agrega algunos registros adicionales a localhost, indicando a los desarrolladores el
+        // trabajador de servicio / documentación de PWA.
         navigator.serviceWorker.ready.then(() => {
           console.log(
             'This web app is being served cache-first by a service ' +
@@ -47,7 +47,7 @@ export function register(config) {
           );
         });
       } else {
-        // Is not localhost. Just register service worker
+        // No es localhost. Simplemente registre al trabajador de servicio
         registerValidSW(swUrl, config);
       }
     });

@@ -1,0 +1,145 @@
+.userCardContainer {
+	display: flex;
+	flex-wrap: wrap;
+	z-index: 1;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.UserCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	margin: 20px;
+	padding: 20px;
+	width: 100%;
+	min-width: 100px;
+	background-color: #e2e4e2;
+	z-index: 1;
+	flex: 1 0 30%;
+	border-radius: 40px;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px ;
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.UserCard1 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 50%;
+}
+
+.UserCard__upper {
+	display: flex;
+	justify-content: space-between;
+}
+
+.UserCard__photo {
+	object-fit: top;
+	width: 120px;
+	height: 120px;
+	margin: 10px;
+	border-radius:100px;
+    border:5px solid #3880ff;
+}
+
+.UserCard__photo {
+	display: none;
+}
+
+.UserCard__photo[src] {
+	display: block;
+}
+
+.UserCard__lower {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.UserCard__lowerItem {
+	margin: 10px;
+}
+
+.userCard__btn {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	border: none;
+	border-radius: 4px;
+	padding: 0 16px;
+	min-width: 64px;
+	height: 36px;
+	vertical-align: middle;
+	text-align: center;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 36px;
+	overflow: hidden;
+	outline: none;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+	box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+		0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+	background-color: #3880ff;
+}
+
+.userCard__btn1 {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	border: none;
+	border-radius: 4px;
+	padding: 0 16px;
+	min-width: 64px;
+	height: 36px;
+	vertical-align: middle;
+	text-align: center;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 36px;
+	overflow: hidden;
+	outline: none;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+	box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+		0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+	background-color: #eb445a;
+}
+
+
+.userCard__btn2 {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	border: none;
+	border-radius: 4px;
+	padding: 0 16px;
+	min-width: 64px;
+	height: 36px;
+	vertical-align: middle;
+	text-align: center;
+	text-overflow: ellipsis;
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 36px;
+	overflow: hidden;
+	outline: none;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+	box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+		0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+	background-color: #3880ff;
+}
+.mapContainer {
+	width: 100%;
+	
+}

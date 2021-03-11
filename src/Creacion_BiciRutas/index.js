@@ -35,6 +35,7 @@ class MainMap extends Component {
 					//position: { lat: -0.24542770000000003, lng: -78.5309735 },
 				},
 			],
+			markers1: [{}],
 			markerList: [
 				{
 					//lat: "",
@@ -43,6 +44,9 @@ class MainMap extends Component {
 				},
 			],
 			routeName: '',
+			hoverTitle: '',
+			hoverPosition: {},
+			currentSeq: 0,
 		};
 		this.onPointMap = this.onPointMap.bind(this);
 	}
@@ -111,7 +115,9 @@ class MainMap extends Component {
 			timestamp: new Date().getTime(),
 		});
 
-		//estado de los marcadores
+		let nextInSeq = parseInt(this.state.currentSeq) + 1;
+
+		//Estado de los marcadores
 		this.setState({
 			markers: [
 				{
@@ -121,7 +127,7 @@ class MainMap extends Component {
 				},
 			],
 			markerList: [{}],
-			routeName: '',
+			routeName: `biciruta${nextInSeq}-`,
 		});
 
 		markerList.forEach((marker) => {
@@ -136,8 +142,45 @@ class MainMap extends Component {
 		// });
 	};
 
+	componentDidMount() {
+		let ref = firebaseDatabase.ref('Bici_rutas');
+		ref.on('value', (snapshot) => {
+			const markersObject = snapshot.val();
+
+			const markersList = Object.keys(markersObject).map((key) => ({
+				...markersObject[key],
+				uid: key,
+			}));
+
+			// Mantener la variable de estado global currentSeq que obtendrá la última ruta guardada en la base de datos y obtendrá el número de ruta de esa ruta
+			// NOTA: esta lógica NO funcionará si se cambia el esquema de nomenclatura de las rutas
+			// Lógica para obtener el último número de ruta: 
+			//-> obtener el nombre de la ruta más reciente 
+			//-> recortar los primeros 8 caracteres para eliminar 'biciruta' 
+			//-> dividir la nueva cadena por el carácter '-' y obtener la primera mitad 
+			//-> recortar el espacio en blanco 
+			//-> la cadena obtenida es nuestra secuencia actual
+			let currentSeq = markersList
+				.sort((a, b) => (a.title > b.title ? 1 : -1))
+				[markersList.length - 1].title.slice(8)
+				.split('-')[0]
+				.trim();
+
+			// Guardar 'nextInSeq' como el número entero mayor que 'currentSeq' en 1
+			let nextInSeq = parseInt(currentSeq) + 1;
+
+			let nextRouteName = `biciruta${nextInSeq}-`;
+
+			this.setState({
+				markers1: markersList,
+				routeName: nextRouteName,
+				currentSeq: currentSeq,
+			});
+		});
+	}
+
 	render() {
-		// redirect to home page if user is not admin
+		// redirigir a la página de inicio si el usuario no es administrador
 		if (
 			this.state.user &&
 			this.state.user.email &&
@@ -153,77 +196,37 @@ class MainMap extends Component {
 			bicycleCoords.push({ lat, lng });
 		});
 
-		const { dataUser } = this.state;
-		const triangleCoords = [
-			{ lat: -0.2230980943885677, lng: -78.51259076329114 },
-			{ lat: -0.220101529811345, lng: -78.51183192334038 },
-			{ lat: -0.2167093539292637, lng: -78.50516878464863 },
-			{ lat: -0.21329979536304305, lng: -78.49991204517507 },
-		];
+		// const allCoords = [
+		// 	{ lat: -0.22379672590243121, lng: -78.51335147156581 },
+		// 	{ lat: -0.2232187142576618, lng: -78.5140877379404 },
+		// 	{ lat: -0.22021209407389694, lng: -78.51164966551303 },
+		// ];
 
-		const linea1 = [
-			{ lat: -0.22379672590243121, lng: -78.51335147156581 },
-			{ lat: -0.2232187142576618, lng: -78.5140877379404 },
-			{ lat: -0.22021209407389694, lng: -78.51164966551303 },
-		];
+		var allCoords = [];
 
-		const linea2 = [
-			{ lat: -0.21040646554435538, lng: -78.49359013054348 },
-			{ lat: -0.21061165314908972, lng: -78.49360890600659 },
-			{ lat: -0.2107873194383424, lng: -78.49351979916473 },
-			{ lat: -0.21115785615137247, lng: -78.49319675494095 },
-			{ lat: -0.2114515560411711, lng: -78.49290439415833 },
-			{ lat: -0.211835224941273, lng: -78.49245571237682 },
-			{ lat: -0.21220840750105238, lng: -78.49200239735264 },
-			{ lat: -0.2123578461876737, lng: -78.49179203082548 },
-			{ lat: -0.21244233519110006, lng: -78.49156001974569 },
-			{ lat: -0.21252139024374792, lng: -78.49101457284425 },
-			{ lat: -0.21271467228823784, lng: -78.48906657662882 },
-		];
+		this.state.markers1.map((user) => {
+			var coords = [];
 
-		const linea3 = [
-			{ lat: -0.21281362289681605, lng: -78.48815016381236 },
-			{ lat: -0.21287799546900013, lng: -78.48648719422313 },
-			{ lat: -0.21259904765428553, lng: -78.48537139527294 },
-			{ lat: -0.21240592993345853, lng: -78.48449163071605 },
-			{ lat: -0.21189094933279307, lng: -78.48359040848705 },
-			{ lat: -0.21139742624108343, lng: -78.48285011879894 },
-		];
+			if (user && user.points) {
+				Object.keys(user.points).map((key) => {
+					var lat = user.points[key].lat;
+					var lng = user.points[key].lng;
+					coords.push({ lat, lng, title: user.title });
+				});
 
-		const linea4 = [
-			{ lat: -0.21073762788600953, lng: -78.48250844092064 },
-			{ lat: -0.20925349961580128, lng: -78.48232929388723 },
-			{ lat: -0.206935408670939, lng: -78.48204586072248 },
-			{ lat: -0.20655453747038352, lng: -78.48207268281263 },
-			{ lat: -0.2062004881771799, lng: -78.4821746067552 },
-			{ lat: -0.20485854714288146, lng: -78.48259621850842 },
-			{ lat: -0.20388441243378663, lng: -78.48294290962328 },
-		];
-
-		const linea5 = [
-			{ lat: -0.21028100723454446, lng: -78.4935867593166 },
-			{ lat: -0.2065581257536007, lng: -78.48792193387715 },
-			{ lat: -0.20383424499662095, lng: -78.48327774915874 },
-		];
-
-		const linea6 = [
-			{ lat: -0.20811234563440373, lng: -78.4901343411253 },
-			{ lat: -0.20819012918253402, lng: -78.49004180491428 },
-			{ lat: -0.20852808528374286, lng: -78.48901183665257 },
-			{ lat: -0.2085562482918483, lng: -78.48895148694973 },
-			{ lat: -0.20745094720432858, lng: -78.4872088093542 },
-			{ lat: -0.207334271876529, lng: -78.48704117129077 },
-			{ lat: -0.2063561364590961, lng: -78.48566456339773 },
-			{ lat: -0.20618581729039775, lng: -78.4853158762258 },
-			{ lat: -0.20581444961819637, lng: -78.48463671945623 },
-			{ lat: -0.20501460878495073, lng: -78.48528953241969 },
-		];
+				allCoords.push(coords);
+			}
+		});
 
 		return (
 			<div>
-				<input
+				<input 
+				style={{
+					marginLeft: '10px',
+					width: '300px'
+				}}
 					value={this.state.routeName}
-					placeholder="Title"
+					placeholder="Nombre BiciRuta"
 					onChange={(e) => {
 						this.setState({
 							routeName: e.target.value,
@@ -235,8 +238,12 @@ class MainMap extends Component {
 					type="button"
 					style={{ marginLeft: '20px' }}
 					onClick={this.handleSaveMarkers}
-					type="danger"
-					disabled={this.state.routeName === ''}
+					type="primary"
+					disabled={
+						this.state.routeName === '' ||
+						this.state.routeName === 'biciruta' ||
+						this.state.routeName.endsWith('-')
+					}
 				>
 					Guardar
 				</Button>
@@ -260,155 +267,111 @@ class MainMap extends Component {
 						this.state.markerList.length === 1
 					}
 				>
-					Delete last Marker
+					Borara ultimo marcador
 				</Button>
 
 				<h1 className="text-center">Crea la BiciRuta</h1>
-				<Map
-					initialCenter={{
-						lat: -0.21020266504029167,
-						lng: -78.48859356991835,
-					}}
-					google={this.props.google}
-					style={{
-						width: '100%',
-						height: '100%',
-					}}
-					className={'map'}
-					zoom={20}
-					onClick={this.onPointMap}
-				>
-					{this.state.markers.slice(1).map((marker, uid) => (
-						<Marker
-							key={uid}
-							title={marker.title}
-							name={marker.name}
-							position={marker.position}
-							draggable={true}
-							onDragend={(t, map, coord) => {
-								const { latLng } = coord;
-								const lat = latLng.lat();
-								const lng = latLng.lng();
-
-								this.setState((prevState) => {
-									const markerList = [
-										...this.state.markerList,
-									];
-									markerList[uid + 1] = {
-										lat,
-										lng,
-									};
-									const markers = [...this.state.markers];
-									markers[uid + 1] = {
-										...markers[uid + 1],
-										position: { lat, lng },
-									};
-									return { markers, markerList };
-								});
+				{allCoords &&
+					allCoords[0] &&
+					Object.entries(allCoords[0]) &&
+					Object.entries(allCoords[0])[0] &&
+					Object.entries(allCoords[0])[0][1] && (
+						<Map
+							initialCenter={{
+								lat: Object.entries(allCoords[0])[0][1].lat,
+								lng: Object.entries(allCoords[0])[0][1].lng,
 							}}
-							icon={{
-								url:
-									'http://maps.google.com/mapfiles/ms/icons/cycling.png',
+							google={this.props.google}
+							style={{
+								width: '100%',
+								height: '100%',
 							}}
-						/>
-					))}
+							className={'map'}
+							zoom={20}
+							onClick={this.onPointMap}
+						>
+							{this.state.markers.slice(1).map((marker, uid) => (
+								<Marker
+									key={uid}
+									title={marker.title}
+									name={marker.name}
+									position={marker.position}
+									draggable={true}
+									onDragend={(t, map, coord) => {
+										const { latLng } = coord;
+										const lat = latLng.lat();
+										const lng = latLng.lng();
 
-					<Marker
-						title={'Santo Domingo'}
-						name={'Santo Domingo'}
-						position={{
-							lat: -0.2230980943885677,
-							lng: -78.51259076329114,
-						}}
-					/>
-					<Marker />
+										this.setState((prevState) => {
+											const markerList = [
+												...this.state.markerList,
+											];
+											markerList[uid + 1] = {
+												lat,
+												lng,
+											};
+											const markers = [
+												...this.state.markers,
+											];
+											markers[uid + 1] = {
+												...markers[uid + 1],
+												position: { lat, lng },
+											};
+											return { markers, markerList };
+										});
+									}}
+									icon={{
+										url:
+											'http://maps.google.com/mapfiles/ms/icons/cycling.png',
+									}}
+								/>
+							))}
 
-					<Marker
-						title={'Plaza Grande'}
-						name={'Plaza Grande'}
-						position={{
-							lat: -0.220101529811345,
-							lng: -78.51183192334038,
-						}}
-					/>
-					<Marker />
+							{/* <Marker
+								title={this.state.hoverTitle}
+								name={this.state.hoverName}
+								position={this.state.hoverPosition}
+							/> */}
+							<InfoWindow
+								position={this.state.hoverPosition}
+								visible={this.state.hoverPosition !== {}}
+							>
+								<div>
+									<h1>{this.state.hoverTitle}</h1>
+								</div>
+							</InfoWindow>
 
-					<Marker
-						title={'Alameda'}
-						name={'Alameda'}
-						position={{
-							lat: -0.2167093539292637,
-							lng: -78.50516878464863,
-						}}
-					/>
-					<Marker />
+							{allCoords.map((poly, index) => (
+								<Polyline
+									onClick={(t, map, coord) => {
+										const { latLng } = coord;
+										const lat = latLng.lat();
+										const lng = latLng.lng();
 
-					<Marker
-						title={'Asamblea Nacional'}
-						name={'Asamblea Nacional'}
-						position={{
-							lat: -0.21329979536304305,
-							lng: -78.49991204517507,
-						}}
-					/>
-					<Marker />
+										this.setState({
+											hoverTitle: poly[0].title,
+											hoverPosition: {
+												lat,
+												lng,
+											},
+										});
+									}}
+									key={index}
+									path={poly}
+									strokeColor="red"
+									strokeOpacity={2}
+									strokeWeight={4}
+								/>
+							))}
 
-					<Polyline
-						path={triangleCoords}
-						strokeColor="#0000FF"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea1}
-						strokeColor="red"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea2}
-						strokeColor="green"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea3}
-						strokeColor="blue"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea4}
-						strokeColor="red"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea5}
-						strokeColor="black"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={linea6}
-						strokeColor="yellow"
-						strokeOpacity={1}
-						strokeWeight={2}
-					/>
-
-					<Polyline
-						path={bicycleCoords}
-						strokeColor="#0000FF"
-						strokeOpacity={0.8}
-						strokeWeight={2}
-					/>
-				</Map>
+							<Polyline
+								path={bicycleCoords}
+								strokeColor="#0000FF"
+								strokeOpacity={0.8}
+								strokeWeight={2}
+							/>
+						</Map>
+					)}
 			</div>
 		);
 	}

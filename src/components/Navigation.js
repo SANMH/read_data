@@ -6,6 +6,7 @@ import LogoutButton from './LogoutButton';
 import '../styles/navigation.css';
 import { ABOUT } from '../constants/routes';
 
+import { RUTAS } from '../constants/routes';
 import { MAPAJS } from '../constants/routes';
 import { INICIO } from '../constants/routes';
 import { ADMIN } from '../constants/routes';
@@ -67,27 +68,24 @@ class Navigation extends React.Component {
 			>
 				<Menu.Item key="home">
 					<Link to="/">
-						<Icon type="home" /> <span>Rutas de Ciclistas</span>
+						<Icon type="home" /> <span>Inicio</span>
 					</Link>
 				</Menu.Item>
 
-				{/* Mostrar opciones solo si es administrador */}
-				{this.state.isAdmin === 'true' && (
-					<Menu.Item key="mapa">
+				<Menu.Item key="rutas">
+					<span>
+						<Icon type="environment" />
 						<span>
-							<Icon type="question-circle" />
-							<span>
-								<Link to={MAPAJS}>Creacion de BiciRutas</Link>
-							</span>
+							<Link to={RUTAS}>Rutas ciclistas</Link>
 						</span>
-					</Menu.Item>
-				)}
+					</span>
+				</Menu.Item>
 
 
 				{this.state.isAdmin === 'true' && (
 					<Menu.Item key="admin">
 						<span>
-							<Icon type="question-circle" />
+							<Icon type="eye" />
 							<span>
 								<Link to={ADMIN}>BiciRutas</Link>
 							</span>
@@ -95,11 +93,24 @@ class Navigation extends React.Component {
 					</Menu.Item>
 				)}
 
+				{/* Mostrar opciones solo si es administrador */}
+				{this.state.isAdmin === 'true' && (
+					<Menu.Item key="mapa">
+						<span>
+							<Icon type="edit" />
+							<span>
+								<Link to={MAPAJS}>Creacion de BiciRutas</Link>
+							</span>
+						</span>
+					</Menu.Item>
+				)}
+
+				
 
 				{this.state.isAdmin === 'true' && (
 					<Menu.Item key="inicio">
 						<span>
-							<Icon type="question-circle" />
+							<Icon type="team" />
 							<span>
 								<Link to={INICIO}>Usuarios CituOnBike</Link>
 							</span>
@@ -107,10 +118,9 @@ class Navigation extends React.Component {
 					</Menu.Item>
 				)}
 
-
 				<Menu.Item key="about">
 					<span>
-						<Icon type="question-circle" />
+						<Icon type="idcard" />
 						<span>
 							<Link to={ABOUT}>Acerca de la página</Link>
 						</span>

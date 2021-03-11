@@ -39,8 +39,8 @@ class App extends React.Component {
 					className="sider"
 				>
 					<div className="sider__logo">
-						<img src="logo.jpeg" alt="logo" width="48px" />
-						<p>CityOnBike</p>
+						<img src="logo.jpeg" alt="logo" width="180px" />
+						
 					</div>
 					<Navigation />
 				</Sider>
@@ -62,7 +62,7 @@ class App extends React.Component {
 						<AppRouter />
 					</Content>
 
-					<Footer className="footer">BiciRuta 2021</Footer>
+					<Footer className="footer">City On Bike 2021</Footer>
 				</Layout>
 			</Layout>
 		);
