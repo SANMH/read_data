@@ -1,59 +1,48 @@
 .app {
-	min-height: 100vh;
+    min-height: 100vh;
 }
 
 .sider {
-	background-color: #f0f2f5;
+    background-color: #f0f2f5;
 }
 
 .sider__logo {
-	height: 120px;
-	/*background-image: url('../imgs/logo.png');*/
-	background-color: #67b050;
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
-	margin: 16px;
-	display: flex;
-	color: white;
-	align-content: center;
-	justify-content: space-between;
-	padding-right: 30px;
-	font-size: large;
+    height: 32px;
+    /*background-image: url('../imgs/logo.png');*/
+    background-color: #00aeef;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin: 16px;
 }
 
 .header {
-	background: #ffffff;
-	padding: 0;
-	position: fixed;
-	z-index: 1;
-	width: 100%;
+    background: #ffffff;
+    padding: 0;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
 }
 
 .header__trigger {
-	font-size: 18px;
-	line-height: 64px;
-	padding: 0 24px;
-	cursor: pointer;
-	transition: color 0.3s;
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
 }
 
 .header__trigger:hover {
-	color: #67b050;
+    color: #00aeef;
 }
 
 .content {
-	margin-top: 65px;
-	overflow: initial;
-	padding: 24px;
-	background: #ffffff;
+    margin-top: 65px;
+    overflow: initial;
+    padding: 24px;
+    background: #ffffff;
 }
 
 .footer {
-	text-align: center;
-}
-
-.map {
-	width: 80vw !important;
-	height: 60vh !important;
+    text-align: center;
 }

@@ -1,14 +1,13 @@
 import React from 'react';
 
 const Loading = ( { isLoading, error } ) => {
-  // Manejar el estado de carga
+  // Handle the loading state
   if( isLoading ) {
-    return <div>Cargando...</div>;
+    return <div>Loading...</div>;
   }
-  // Manejar el estado de error
+  // Handle the error state
   else if( error ) {
-    return <div>
-    Lo sentimos, hubo un problema al cargar la página.</div>;
+    return <div>Sorry, there was a problem loading the page.</div>;
   } else {
     return null;
   }

@@ -15,7 +15,7 @@ import { startSetLoginState } from './actions/authActions';
 import 'leaflet/dist/leaflet.css';
 
 
-const store = configureStore(/* proporcionar el estado inicial si lo hay */ );
+const store = configureStore(/* provide initial state if any */ );
 
 const target = document.querySelector( '#root' );
 
@@ -40,7 +40,7 @@ const renderApp = () => render(
   target
 );
 
-// Si desea que su aplicación funcione sin conexión y se cargue más rápido, puede cambiar
-// anular el registro () para registrar () a continuación. Tenga en cuenta que esto conlleva algunas dificultades.
-// Obtenga más información sobre los trabajadores del servicio: http://bit.ly/CRA-PWA
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
